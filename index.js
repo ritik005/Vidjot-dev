@@ -19,10 +19,13 @@ var users = require('./routes/users');
 // passport config
 require('./config/passport')(passport);
 
+//DB config
+const db = require('./config/database');
+
 //map global promise - get rid of warning
 mongoose.Promise = global.Promise;
 // connect to mongoose
-mongoose.connect('mongodb://localhost/vidjot-dev',{
+mongoose.connect(db.mongoURI,{
    
 })
 .then(() => console.log('mongodb connected..'))
@@ -91,7 +94,7 @@ index.use('/ideas', ideas);
 index.use('/users', users);
 
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 index.listen(port, () =>{
     console.log(`server listen to port number ${port}`);
 });
