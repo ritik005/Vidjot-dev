@@ -21,15 +21,31 @@ require('./config/passport')(passport);
 
 //DB config
 const db = require('./config/database');
-
-//map global promise - get rid of warning
+console.log(db.mongoURI);
 mongoose.Promise = global.Promise;
-// connect to mongoose
-mongoose.connect(db.mongoURI,{
+// Mongoose Connect
+const connectionString = db.mongoURI;
+
+mongoose
+  .connect(connectionString, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
+  .then(function() {
+    console.log("MongoDB Connected");
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
+//map global promise - get rid of warning
+// mongoose.Promise = global.Promise;
+// // connect to mongoose
+// mongoose.connect(db.mongoURI,{
    
-})
-.then(() => console.log('mongodb connected..'))
-.catch(err => console.log(err));
+// })
+// .then(() => console.log('mongodb connected..'))
+// .catch(err => console.log(err));
 
 require('./models/Idea');
 const Idea = mongoose.model('ideas');
@@ -94,7 +110,7 @@ index.use('/ideas', ideas);
 index.use('/users', users);
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 index.listen(port, () =>{
     console.log(`server listen to port number ${port}`);
 });
